@@ -86,8 +86,19 @@
 				}
 			}
 		</style>
+		<style>
+			#draggable { width: 150px; height: 150px; padding: 0.5em; }
+		</style>
+		<script>
+			$(function() {
+			$( "#draggable" ).draggable();
+			});
+		</script>
+
+
 	</head>
 	<body>
+	
 		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 		<div id="status" role="complementary">
 			<h1>Application Status</h1>
@@ -125,5 +136,17 @@
 				</ul>
 			</div>
 		</div>
+		<div class="demo">
+
+		<div id="draggable" class="ui-widget-content">
+			<p>Drag me around</p>
+		</div>
+
+		</div><!-- End demo -->
+
+		<div class="demo-description" style="display: none; ">
+			<p>Enable draggable functionality on any DOM element. Move the draggable object by clicking on it with the mouse and dragging it anywhere within the viewport.</p>
+		</div><!-- End demo-description -->
+
 	</body>
 </html>
