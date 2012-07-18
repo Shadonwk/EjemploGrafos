@@ -1,6 +1,13 @@
 <!doctype html>
 <html>
 	<head>
+        <g:javascript src="/JQuery/jquery-1.7.2.min.js"  />
+        <script type="text/javascript">
+            $(document).ready(function(){
+                // do some common init
+                alert("Hola Mundo con jQuery!");
+            })
+        </script>
 		<meta name="layout" content="main"/>
 		<title>Welcome to Grails</title>
 		<style type="text/css" media="screen">
