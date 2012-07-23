@@ -1,13 +1,33 @@
 <!doctype html>
 <html>
 	<head>
+
+
+
         <g:javascript src="/JQuery/jquery-1.7.2.min.js"  />
+        <g:javascript src="/JQuery/jquery-ui-1.8.21.custom.min.js"  />
+        <g:javascript src="/JsPlumb/jsPlumb-1.3.10-all-min.js"  />
         <script type="text/javascript">
             $(document).ready(function(){
                 // do some common init
                 alert("Hola Mundo con jQuery!");
             })
         </script>
+
+        <script>
+            $(function() {
+                $( "#draggable" ).draggable();
+                $( "#droppable" ).droppable({
+                    drop: function( event, ui ) {
+                        $( this )
+                                .addClass( "ui-state-highlight" )
+                                .find( "p" )
+                                .html( "Dropped!" );
+                    }
+                });
+            });
+        </script>
+
 		<meta name="layout" content="main"/>
 		<title>Welcome to Grails</title>
 		<style type="text/css" media="screen">
@@ -89,64 +109,87 @@
 		<style>
 			#draggable { width: 150px; height: 150px; padding: 0.5em; }
 		</style>
+
 		<script>
-			$(function() {
-			$( "#draggable" ).draggable();
-			});
-		</script>
+
+            jsPlumb.bind("ready", function() {
+                // chrome fix.
+                document.onselectstart = function () { return false; };
+
+                var newMode = jsPlumb.setRenderMode(jsPlumb.CANVAS);
+
+                // explanation div is draggable
+                $("#explanation,.renderMode").draggable();
+
+                var aConnection = jsPlumb.connect({source:"window1", target:"window2"});
+
+                // make all the window divs draggable
+                jsPlumb.draggable(jsPlumb.getSelector(".window"));
+
+            });
+
+
+            // this is overridden by the YUI demo.
+            windows.jsPlumbInstance {
+                createDisc : function() {
+                var d = document.createElement("div");
+                d.className = "bigdot";
+                document.getElementById("demo").appendChild(d);
+                var id = '' + ((new Date().getTime())), _d = jsPlumb.CurrentLibrary.getElementObject(d);
+                jsPlumb.CurrentLibrary.setAttribute(_d, "id", id);
+                var w = screen.width - 162, h = screen.height - 162;
+                var x = (0.2 * w) + Math.floor(Math.random()*(0.5 * w));
+                var y = (0.2 * h) + Math.floor(Math.random()*(0.6 * h));
+                d.style.top= y + 'px';
+                d.style.left= x + 'px';
+                return {d:d, id:id};
+                },
+                addDisc : function() {
+                    var info = jsPlumbDemo.createDisc();
+                    var e = prepare(info.id);
+                    jsPlumb.draggable(info.id);
+                    discs.push(info.id);
+                },
+            };
+
+
+
+
+        </script>
 
 
 	</head>
 	<body>
-	
-		<a href="#page-body" class="skip"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div id="status" role="complementary">
-			<h1>Application Status</h1>
-			<ul>
-				<li>App version: <g:meta name="app.version"/></li>
-				<li>Grails version: <g:meta name="app.grails.version"/></li>
-				<li>Groovy version: ${org.codehaus.groovy.runtime.InvokerHelper.getVersion()}</li>
-				<li>JVM version: ${System.getProperty('java.version')}</li>
-				<li>Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</li>
-				<li>Controllers: ${grailsApplication.controllerClasses.size()}</li>
-				<li>Domains: ${grailsApplication.domainClasses.size()}</li>
-				<li>Services: ${grailsApplication.serviceClasses.size()}</li>
-				<li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
-			</ul>
-			<h1>Installed Plugins</h1>
-			<ul>
-				<g:each var="plugin" in="${applicationContext.getBean('pluginManager').allPlugins}">
-					<li>${plugin.name} - ${plugin.version}</li>
-				</g:each>
-			</ul>
-		</div>
-		<div id="page-body" role="main">
-			<h1>Welcome to Grails</h1>
-			<p>Congratulations, you have successfully started your first Grails application! At the moment
-			   this is the default page, feel free to modify it to either redirect to a controller or display whatever
-			   content you may choose. Below is a list of controllers that are currently deployed in this application,
-			   click on each to execute its default action:</p>
 
-			<div id="controller-list" role="navigation">
-				<h2>Available Controllers:</h2>
-				<ul>
-					<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-						<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-					</g:each>
-				</ul>
-			</div>
-		</div>
-		<div class="demo">
 
-		<div id="draggable" class="ui-widget-content">
-			<p>Drag me around</p>
-		</div>
+    <div class="demo">
 
-		</div><!-- End demo -->
+        <div id="draggable" class="ui-widget-content">
+            <p>Drag me to my target</p>
+        </div>
 
-		<div class="demo-description" style="display: none; ">
-			<p>Enable draggable functionality on any DOM element. Move the draggable object by clicking on it with the mouse and dragging it anywhere within the viewport.</p>
-		</div><!-- End demo-description -->
+        <div id="droppable" class="ui-widget-header">
+            <p>Drop here</p>
+        </div>
+
+    </div><!-- End demo -->
+
+
+
+    <div class="demo-description" style="display: none; ">
+        <p>Enable any DOM element to be droppable, a target for draggable elements.</p>
+    </div><!-- End demo-description -->
+
+    <div style="position:relative;margin-top:100px;">
+        <div id="demo">
+            <div class="window" id="window1"><strong>1</strong><br/><br/></div>
+            <div class="window" id="window2"><strong>2</strong><br/><br/></div>
+            <div class="window" id="window3"><strong>3</strong><br/><br/></div>
+            <div class="window" id="window4"><strong>4</strong><br/><br/></div>
+        </div>
+    </div>
+
+
 
 	</body>
 </html>
